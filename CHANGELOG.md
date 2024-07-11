@@ -1,5 +1,9 @@
 # Changelog
 
+### Dependencies
+
+* [workspace](https://github.com/npm/cli/releases/tag/libnpmexec-v8.1.4): `libnpmexec@8.1.4`
+
 ## [10.8.2](https://github.com/npm/cli/compare/v10.8.1...v10.8.2) (2024-07-09)
 
 ### Bug Fixes
