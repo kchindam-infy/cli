@@ -75,7 +75,33 @@ class AuditReport extends Map {
     // require a semver major update.
     const vulnerabilities = []
     for (const [name, vuln] of this.entries()) {
-      vulnerabilities.push([name, vuln.toJSON()])
+      const vulnJson = vuln.toJSON()
+
+      // **Modification Start**
+      // Ensure that the 'via' property is consistently an array of objects
+      vulnJson.via = vulnJson.via.map(viaEntry => {
+        if (typeof viaEntry === 'string') {
+          return {
+            name: viaEntry,
+            source: null,
+            dependency: viaEntry,
+            title: `Vulnerability in ${viaEntry}`,
+            url: null,
+            severity: vulnJson.severity,
+            range: vulnJson.range,
+            via: [],
+            effects: [],
+            type: 'indirect',
+            vulnerableVersions: vulnJson.range,
+            patchedVersions: vulnJson.patchedVersions,
+          }
+        } else {
+          return viaEntry
+        }
+      })
+      // **Modification End**
+
+      vulnerabilities.push([name, vulnJson])
       obj.metadata.vulnerabilities[vuln.severity]++
     }
 
@@ -157,9 +183,25 @@ class AuditReport extends Map {
             continue
           }
 
-          // we will have loaded the source already if this is a metavuln
           if (advisory.type === 'metavuln') {
-            vuln.addVia(this.get(advisory.dependency))
+            // **Modification Start**
+            // Ensure that 'vuln.addVia' always receives an object
+            const depVuln = this.get(advisory.dependency)
+            vuln.addVia(depVuln || {
+              name: advisory.dependency,
+              source: null,
+              dependency: advisory.dependency,
+              title: `Vulnerability in ${advisory.dependency}`,
+              url: null,
+              severity: advisory.severity || vuln.severity,
+              range: advisory.vulnerable_versions || vuln.range,
+              via: [],
+              effects: [],
+              type: 'indirect',
+              vulnerableVersions: advisory.vulnerable_versions || vuln.range,
+              patchedVersions: advisory.patched_versions || vuln.patchedVersions,
+            })
+            // **Modification End**
           }
 
           // already marked this one, no need to do it again
