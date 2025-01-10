@@ -123,17 +123,14 @@ When using `npm workspaces`, you might have multiple packages that depend on one
 
 #### Note on `--save`
 By default, `npm version -ws` will bump the versions in each workspace without automatically 
-updating dependency references across workspaces. Including the `--save` flag triggers a 
-minimal reify operation that updates references **if** your semver range allows it.
+updating dependency references across workspaces. Including the `--save` flag ensures that dependency 
+references are updated when the sember range allows it.
 
 For example, if a dependency is declared as `^1.0.2`, a minor bump from `1.0.2` to `1.1.0` 
 is valid under the caret range, so npm updates the reference to `^1.1.0`. However, 
 moving from `1.x.x` to `2.x.x` is outside of the caret range. In that case, 
 you must broaden the range (e.g., `">=1.0.0 <3.0.0"`, `"^1.0.0 || ^2.0.0"`, etc.) or 
 manually update it to allow a major bump.
-
-It's important to note, Reify takes place even without the `--save` flag. However, in that case, 
-package.json is not modified to reflect updated dependency references. 
 
 ### See Also
 
