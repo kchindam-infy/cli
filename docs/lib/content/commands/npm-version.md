@@ -132,6 +132,9 @@ moving from `1.x.x` to `2.x.x` is outside of the caret range. In that case,
 you must broaden the range (e.g., `">=1.0.0 <3.0.0"`, `"^1.0.0 || ^2.0.0"`, etc.) or 
 manually update it to allow a major bump.
 
+It's important to note, Reify takes place even without the `--save` flag. However, in that case, 
+package.json is not modified to reflect updated dependency references. 
+
 ### See Also
 
 * [npm init](/commands/npm-init)
